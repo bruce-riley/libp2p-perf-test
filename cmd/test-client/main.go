@@ -12,12 +12,11 @@ import (
 	"time"
 
 	"github.com/libp2p/go-libp2p"
-	"github.com/libp2p/go-libp2p-core/network"
-	"github.com/libp2p/go-libp2p-core/peer"
-	"github.com/libp2p/go-libp2p-core/protocol"
-
-	quic "github.com/libp2p/go-libp2p-quic-transport"
-	tcp "github.com/libp2p/go-tcp-transport"
+	"github.com/libp2p/go-libp2p/core/network"
+	"github.com/libp2p/go-libp2p/core/peer"
+	"github.com/libp2p/go-libp2p/core/protocol"
+	quic "github.com/libp2p/go-libp2p/p2p/transport/quic"
+	"github.com/libp2p/go-libp2p/p2p/transport/tcp"
 	ma "github.com/multiformats/go-multiaddr"
 )
 
@@ -45,7 +44,7 @@ func main() {
 
 	ctx := context.Background()
 
-	host, err := libp2p.New(ctx,
+	host, err := libp2p.New(
 		libp2p.NoListenAddrs,
 		libp2p.Transport(tcp.NewTCPTransport),
 		libp2p.Transport(quic.NewTransport),
@@ -54,7 +53,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Printf("Connecting to %s", pi.ID.Pretty())
+	log.Printf("Connecting to %s", pi.ID.String())
 
 	cctx, cancel := context.WithTimeout(ctx, 60*time.Second)
 	defer cancel()

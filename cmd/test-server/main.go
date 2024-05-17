@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"io"
@@ -10,11 +9,10 @@ import (
 	"time"
 
 	"github.com/libp2p/go-libp2p"
-	"github.com/libp2p/go-libp2p-core/network"
-	"github.com/libp2p/go-libp2p-core/protocol"
-
-	quic "github.com/libp2p/go-libp2p-quic-transport"
-	tcp "github.com/libp2p/go-tcp-transport"
+	"github.com/libp2p/go-libp2p/core/network"
+	"github.com/libp2p/go-libp2p/core/protocol"
+	quic "github.com/libp2p/go-libp2p/p2p/transport/quic"
+	"github.com/libp2p/go-libp2p/p2p/transport/tcp"
 )
 
 const TestProtocol = protocol.ID("/libp2p/test/data")
@@ -32,12 +30,10 @@ func main() {
 	}
 	testFilePath = *testFile
 
-	ctx := context.Background()
-
-	host, err := libp2p.New(ctx,
+	host, err := libp2p.New(
 		libp2p.ListenAddrStrings(
 			fmt.Sprintf("/ip4/0.0.0.0/tcp/%d", *port),
-			fmt.Sprintf("/ip4/0.0.0.0/udp/%d/quic", *port),
+			fmt.Sprintf("/ip4/0.0.0.0/udp/%d/quic-v1", *port),
 		),
 		libp2p.Transport(tcp.NewTCPTransport),
 		libp2p.Transport(quic.NewTransport),
